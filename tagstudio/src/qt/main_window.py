@@ -15,13 +15,13 @@
 
 import logging
 import typing
-from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect,QSize, Qt)
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect,QSize, Qt, QStringListModel)
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (QComboBox, QFrame, QGridLayout,
                                QHBoxLayout, QVBoxLayout, QLayout, QLineEdit, QMainWindow,
                                QPushButton, QScrollArea, QSizePolicy,
                                QStatusBar, QWidget, QSplitter, QCheckBox,
-                               QSpacerItem)
+                               QSpacerItem, QCompleter)
 from src.qt.pagination import Pagination
 from src.qt.widgets.landing import LandingWidget
 
@@ -73,14 +73,6 @@ class Ui_MainWindow(QMainWindow):
         # left side spacer
         spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
-  
-        # Search type selector
-        self.comboBox_2 = QComboBox(self.centralwidget)
-        self.comboBox_2.setMinimumSize(QSize(165, 0))
-        self.comboBox_2.setObjectName("comboBox_2")
-        self.comboBox_2.addItem("")
-        self.comboBox_2.addItem("")
-        self.horizontalLayout_3.addWidget(self.comboBox_2)
   
         # Thumbnail Size placeholder
         self.thumb_size_combobox = QComboBox(self.centralwidget)
@@ -167,6 +159,11 @@ class Ui_MainWindow(QMainWindow):
         font2.setBold(False)
         self.searchField.setFont(font2)
 
+        self.searchFieldCompletionList = QStringListModel()
+        self.searchFieldCompleter = QCompleter(self.searchFieldCompletionList, self.searchField)
+        self.searchFieldCompleter.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.searchField.setCompleter(self.searchFieldCompleter)
+
         self.horizontalLayout_2.addWidget(self.searchField)
 
         self.searchButton = QPushButton(self.centralwidget)
@@ -209,9 +206,6 @@ class Ui_MainWindow(QMainWindow):
         self.searchButton.setText(
             QCoreApplication.translate("MainWindow", u"Search", None))
   
-        # Search type selector
-        self.comboBox_2.setItemText(0, QCoreApplication.translate("MainWindow", "And (Includes All Tags)"))
-        self.comboBox_2.setItemText(1, QCoreApplication.translate("MainWindow", "Or (Includes Any Tag)"))
         self.thumb_size_combobox.setCurrentText("")
   
         # Thumbnail size selector
